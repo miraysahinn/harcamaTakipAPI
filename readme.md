@@ -2,7 +2,9 @@
 
 Bu proje FastAPI öğrenmek icin gelistirdiğim basit bir harcama takip API projesidir.
 
-İlk hafta veriler veritabanı kullanılmadan listelerde tutulmaktadır.
+1. haftada FastAPI temel endpoint işlemlerinı yaptım ve veriler Python listelerinde tuttum
+
+2. haftada SQLite ve SQLAlchemy kullanılarak veritabanına gecirdim. Veriler artık veritabanında kalıcı olarak tutuluyor.
 
 ## Yapılan İşlemler
 
@@ -18,10 +20,13 @@ Bu proje FastAPI öğrenmek icin gelistirdiğim basit bir harcama takip API proj
 - Harcama tutarının 0'dan büyük olmasını kontrol etme
 - Gelecek tarihli harcama eklenmesini engelleme
 - Olmayan kategoriye harcama eklenmesini engelleme
+- SQLite ile verileri kalıcı olarak saklama
+- SQLAlchemy ile veritabanı işlemleri
+- Depends ile veritabanı bağlantısı
 
 ## Kurulum
 
-Gerekli paketleri yüklemek icin:
+Gerekli paketleri yüklemek için:
 
 ```bash
 pip install -r requirements.txt
@@ -29,13 +34,13 @@ pip install -r requirements.txt
 
 ## Çalıştırma
 
-Projeyi calıştırmak için:
+Projeyi çalıştırmak için:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-sonra tarayıcıdan aşağıdaki adrese gidilir:
+Daha sonra tarayıcıdan aşağıdaki adrese gidilir:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -49,3 +54,5 @@ API işlemleri bu sayfa üzerinden test edilir.
 - FastAPI
 - Pydantic
 - Uvicorn
+- SQLite
+- SQLAlchemy
