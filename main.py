@@ -11,7 +11,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Harcama Takip API",
     description="FastAPI Harcama Takip Projesi",
-    version="2.0"
+    version="3.0"
 )
 
 
@@ -203,6 +203,12 @@ def harcama_ekle(
 @app.get("/harcamalar", response_model=list[HarcamaResponse])
 def harcamalari_getir(
     kategori_id: int | None = None,
+    baslangic_tarihi: date | None = None,
+    bitis_tarihi: date | None = None,
+    min_tutar: float | None = None,
+    max_tutar: float | None = None,
+    limit: int = 10,
+    offset: int = 0,
     db: Session = Depends(get_db)
 ):
     sorgu = db.query(models.Harcama)
@@ -212,7 +218,27 @@ def harcamalari_getir(
             models.Harcama.kategori_id == kategori_id
         )
 
-    return sorgu.all()
+    if baslangic_tarihi is not None:
+        sorgu = sorgu.filter(
+            models.Harcama.tarih >= baslangic_tarihi
+        )
+
+    if bitis_tarihi is not None:
+        sorgu = sorgu.filter(
+            models.Harcama.tarih <= bitis_tarihi
+        )
+
+    if min_tutar is not None:
+        sorgu = sorgu.filter(
+            models.Harcama.tutar >= min_tutar
+        )
+
+    if max_tutar is not None:
+        sorgu = sorgu.filter(
+            models.Harcama.tutar <= max_tutar
+        )
+
+    return sorgu.offset(offset).limit(limit).all()
 
 
 @app.get("/harcamalar/{harcama_id}", response_model=HarcamaResponse)
@@ -295,3 +321,49 @@ def harcama_sil(
     db.commit()
 
     return Response(status_code=204)
+
+
+@app.get("/rapor/aylik")
+def aylik_rapor(
+    yil: int,
+    ay: int,
+    db: Session = Depends(get_db)
+):
+    if ay < 1 or ay > 12:
+        raise HTTPException(
+            status_code=422,
+            detail="Ay 1 ile 12 arasında olmalıdır"
+        )
+
+    harcamalar = db.query(models.Harcama).filter(
+        models.Harcama.tarih >= date(yil, ay, 1)
+    ).all()
+
+    aylik_harcamalar = []
+
+    for harcama in harcamalar:
+        if harcama.tarih.year == yil and harcama.tarih.month == ay:
+            aylik_harcamalar.append(harcama)
+
+    kategori_toplamlari = {}
+    genel_toplam = 0
+
+    for harcama in aylik_harcamalar:
+        kategori = db.query(models.Kategori).filter(
+            models.Kategori.id == harcama.kategori_id
+        ).first()
+
+        kategori_ismi = kategori.isim
+
+        if kategori_ismi not in kategori_toplamlari:
+            kategori_toplamlari[kategori_ismi] = 0
+
+        kategori_toplamlari[kategori_ismi] += harcama.tutar
+        genel_toplam += harcama.tutar
+
+    return {
+        "yil": yil,
+        "ay": ay,
+        "kategori_toplamlari": kategori_toplamlari,
+        "genel_toplam": genel_toplam
+    }

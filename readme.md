@@ -1,10 +1,12 @@
 # Harcama Takip API
 
-Bu proje FastAPI öğrenmek icin gelistirdiğim basit bir harcama takip API projesidir.
+Bu proje FastAPI öğrenmek amacıyla geliştirdiğim basit bir harcama takip API projesidir.
 
-1. haftada FastAPI temel endpoint işlemlerinı yaptım ve veriler Python listelerinde tuttum
+1. haftada FastAPI temel endpoint işlemleri yapıldı ve veriler Python listelerinde tutuldu.
 
-2. haftada SQLite ve SQLAlchemy kullanılarak veritabanına gecirdim. Veriler artık veritabanında kalıcı olarak tutuluyor.
+2. haftada SQLite ve SQLAlchemy kullanılarak veritabanına geçildi. Veriler artık veritabanında kalıcı olarak tutulmaktadır.
+
+3. haftada harcamalar için kategori, tarih aralığı, minimum ve maksimum tutar filtreleri eklendi. Limit ve offset ile sayfalama yapıldı. Ayrıca aylık harcama raporu oluşturuldu.
 
 ## Yapılan İşlemler
 
@@ -23,6 +25,12 @@ Bu proje FastAPI öğrenmek icin gelistirdiğim basit bir harcama takip API proj
 - SQLite ile verileri kalıcı olarak saklama
 - SQLAlchemy ile veritabanı işlemleri
 - Depends ile veritabanı bağlantısı
+- Kategoriye göre harcama filtreleme
+- Tarih aralığına göre harcama filtreleme
+- Minimum ve maksimum tutara göre filtreleme
+- Limit ve offset ile sayfalama
+- Aylık harcama raporu
+- Kategori bazlı ve genel toplam hesaplama
 
 ## Kurulum
 
@@ -46,7 +54,7 @@ Daha sonra tarayıcıdan aşağıdaki adrese gidilir:
 http://127.0.0.1:8000/docs
 ```
 
-API işlemleri bu sayfa üzerinden test edilir.
+API işlemleri bu sayfa üzerinden test edilebilir.
 
 ## Kullanılan Teknolojiler
 
